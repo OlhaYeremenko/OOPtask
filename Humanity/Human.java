@@ -1,6 +1,7 @@
 package Humanity;
 
 import java.util.Random;
+import java.util.Scanner;
 
 public abstract class Human implements IHumanable {
 
@@ -69,15 +70,19 @@ public abstract class Human implements IHumanable {
 	public boolean isSex() {
 		return sex;
 	}
-private  String sexString;
-	public void setSex(boolean sex) {
-		
-	        if(this.sex == false){
-	            sexString = "Woman";
-	        }
-	        else {sexString = "Man";}
 
-  		this.sex = sex;
+	private String sexString;
+
+	public void setSex(boolean sex) {
+		sexString = null;
+		if (sex == false) {
+			sexString = "Woman";
+		}
+		if (sex == true) {
+			sexString = "Man";
+		}
+
+		this.sex = sex;
 	}
 
 	public boolean isInteger(String input) {
@@ -90,28 +95,24 @@ private  String sexString;
 	}
 
 	public boolean speak(Human h2) {
-		if (isSex() && h2.isSex()){
-			double r = Math.random();
-			System.out.println(r);
-			if (r < 0.5)
+		if (isSex() && h2.isSex()) {
+			if (Math.random() < 0.5)
 				return true;
 		}
 		return true;
 
 	}
 
-	@Override
 	public boolean suffer(Human h2) {
 		Random random = new Random();
-		if (this.isSex() == true && h2.isSex() == true) {
+		if (isSex() == true && h2.isSex() == true) {
 			if (random.nextDouble() <= 0.056)
 				return false;
-		} else if ((this.isSex() == false && h2.isSex() == true)
-				|| (this.isSex() == true && h2.isSex() == false)) {
+		} else if ((isSex() == false && h2.isSex() == true)
+				|| (isSex() == true && h2.isSex() == false)) {
 			if (random.nextDouble() <= 0.7)
 				return false;
 		}
-
 		if (random.nextDouble() <= 0.05)
 			return false;
 
@@ -121,10 +122,10 @@ private  String sexString;
 	/*- проводить врем€ вместе (возвращает boolean)
 	 если рост экземпл€ров отличаетс€ более чем на 10%, метод возвращает true с веро€тностью 0.85
 	 если рост экземпл€ров отличаетс€ менее чем на 10%, метод возвращает true с веро€тностью 0.95*/
-	@Override
+
 	public boolean spendTime(Human h2) {
 		Random random = new Random();
-		if (Math.abs(this.height - h2.height) > this.height * 0.1
+		if (Math.abs(getHeight() - h2.height) > getHeight() * 0.1
 				&& Math.random() < 0.85) {
 			return true;
 		} else {
@@ -135,46 +136,34 @@ private  String sexString;
 		return false;
 	}
 
-	/*
-	 * если УговоритьФ && Утерпеть/выдерживать обществоФ && Упроводить врем€
-	 * вместеФ равно true, то если свойство УполФ собственного экземпл€ра и пол
-	 * аргумента одинаковые, то вернуть null, иначе создать экземпл€р нового
-	 * человека путем вызова метода Уродить человекаФ у экземпл€ра с полом ∆.
-	 */
-	@Override
 	public Human haveRelationship(Human h2) {
 		Human result = null;
 		Woman w;
 		Man m;
 
-		if (this.speak(h2) && this.suffer(h2) && this.spendTime(h2)) {
-			if (this.isSex() == h2.isSex()) {
+		if (speak(h2) && suffer(h2) && spendTime(h2)) {
+			if (isSex() == h2.isSex()) {
 				result = null;
 			} else {
 				if (this.isSex() == false) {
 					w = (Woman) this;
-					return w.giveBirth("name", (Man) h2);
+
+					return w.giveBirth((Man) h2);
 				}
 
 			}
 		}
-		
+
 		return result;
 	}
 
 	@Override
 	public String toString() {
-	//if(this!=null)
+		// if(this!=null)
 		return "Human [name=" + name + ", secondName=" + secondName
-				+ ", height=" + height + ", weight=" + weight + ", sex=" + sexString
-				+ "]";
-		//return "There is no human";
-	}
-
-	@Override
-	public Human testCompatibility() {
-
-		return null;
+				+ ", height=" + height + ", weight=" + weight + ", sex="
+				+ sexString + "]";
+		// return "There is no human";
 	}
 
 }
